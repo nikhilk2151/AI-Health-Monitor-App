@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Health Mentor - Your Personal Wellness Companion</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --sky-blue: #87CEEB;
+      --soft-purple: #D8B4FE;
+      --light-gold: #FCD34D;
+      --soft-green: #86EFAC;
+      --white-glow: rgba(255, 255, 255, 0.8);
+    }
+
+    body {
+      background: linear-gradient(135deg, #E0F2FE 0%, #F3E8FF 50%, #FDF4FF 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, rgba(135, 206, 235, 0.6) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 15s infinite ease-in-out;
+    }
+
+    .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 20s; }
+    .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 18s; }
+    .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 22s; }
+    .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 19s; }
+    .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 21s; }
+    .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 17s; }
+    .particle:nth-child(7) { left: 70%; animation-delay: 2.5s; animation-duration: 23s; }
+    .particle:nth-child(8) { left: 80%; animation-delay: 1.5s; animation-duration: 20s; }
+    .particle:nth-child(9) { left: 90%; animation-delay: 4.5s; animation-duration: 18s; }
+    .particle:nth-child(10) { left: 15%; animation-delay: 3.5s; animation-duration: 24s; }
+    .particle:nth-child(11) { left: 45%; animation-delay: 0.5s; animation-duration: 16s; }
+    .particle:nth-child(12) { left: 75%; animation-delay: 6s; animation-duration: 25s; }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+        transform: translateY(90vh) scale(1);
+      }
+      90% {
+        opacity: 1;
+        transform: translateY(10vh) scale(1);
+      }
+      100% {
+        transform: translateY(-10vh) scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* Glassmorphism Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(135, 206, 235, 0.15),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .glass-card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(135, 206, 235, 0.25),
+                  0 0 40px rgba(216, 180, 254, 0.2),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    /* Glowing Button */
+    .btn-glow {
+      background: linear-gradient(135deg, #87CEEB 0%, #D8B4FE 100%);
+      box-shadow: 0 4px 20px rgba(135, 206, 235, 0.4),
+                  0 0 40px rgba(216, 180, 254, 0.2);
+      transition: all 0.4s ease;
+    }
+
+    .btn-glow:hover {
+      box-shadow: 0 8px 30px rgba(135, 206, 235, 0.6),
+                  0 0 60px rgba(216, 180, 254, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .btn-outline-glow {
+      background: rgba(255, 255, 255, 0.3);
+      border: 2px solid rgba(135, 206, 235, 0.5);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+    }
+
+    .btn-outline-glow:hover {
+      background: rgba(255, 255, 255, 0.5);
+      border-color: rgba(135, 206, 235, 0.8);
+      box-shadow: 0 0 30px rgba(135, 206, 235, 0.3);
+      transform: translateY(-3px);
+    }
+
+    /* Hero Glow Animation */
+    .hero-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(135, 206, 235, 0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse-glow 6s ease-in-out infinite;
+    }
+
+    .hero-glow-2 {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(216, 180, 254, 0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse-glow 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    /* Feature Icon Glow */
+    .icon-glow {
+      background: linear-gradient(135deg, rgba(135, 206, 235, 0.2) 0%, rgba(216, 180, 254, 0.2) 100%);
+      box-shadow: 0 0 30px rgba(135, 206, 235, 0.3);
+    }
+
+    /* Chat Message Styling */
+    .chat-bubble-user {
+      background: linear-gradient(135deg, #87CEEB 0%, #D8B4FE 100%);
+      border-radius: 20px 20px 4px 20px;
+    }
+
+    .chat-bubble-ai {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px 20px 20px 4px;
+    }
+
+    /* Progress Ring */
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle {
+      transition: stroke-dashoffset 1.5s ease-in-out;
+    }
+
+    /* Yoga Card Hover */
+    .yoga-card:hover .yoga-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Meditation Video */
+    .meditation-video {
+      background: linear-gradient(135deg, rgba(135, 206, 235, 0.3) 0%, rgba(216, 180, 254, 0.3) 100%);
+      box-shadow: 0 0 60px rgba(135, 206, 235, 0.2), 0 0 100px rgba(216, 180, 254, 0.1);
+    }
+
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Nav link hover effect */
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #87CEEB, #D8B4FE);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Dashboard Chart Bars */
+    .chart-bar {
+      animation: grow-up 1s ease-out forwards;
+      transform-origin: bottom;
+    }
+
+    @keyframes grow-up {
+      from { transform: scaleY(0); }
+      to { transform: scaleY(1); }
+    }
+
+    /* Feature Card Stagger Animation */
+    .feature-card {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fade-in-up 0.6s ease-out forwards;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.2s; }
+    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+    .feature-card:nth-child(4) { animation-delay: 0.4s; }
+    .feature-card:nth-child(5) { animation-delay: 0.5s; }
+    .feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes fade-in-up {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Floating Animation for Illustration */
+    .float-animation {
+      animation: float-y 4s ease-in-out infinite;
+    }
+
+    @keyframes float-y {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* Play Button Pulse */
+    .play-btn {
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(135, 206, 235, 0.5); }
+      100% { box-shadow: 0 0 0 20px rgba(135, 206, 235, 0); }
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+  <!-- Floating Particles Background -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="glass-card fixed top-0 left-0 right-0 z-50 px-6 py-4 mx-4 mt-4 rounded-2xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-300 to-purple-300 flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+        </div>
+        <span class="text-xl font-bold bg-gradient-to-r from-sky-600 to-purple-600 bg-clip-text text-transparent">AI Health Mentor</span>
+      </div>
+
+      <!-- Menu Items -->
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="#" class="nav-link text-gray-700 font-medium hover:text-sky-600 transition-colors">Home</a>
+        <a href="#dashboard" class="nav-link text-gray-600 hover:text-sky-600 transition-colors">Dashboard</a>
+        <a href="#ai-chat" class="nav-link text-gray-600 hover:text-sky-600 transition-colors">AI Chat</a>
+        <a href="#yoga" class="nav-link text-gray-600 hover:text-sky-600 transition-colors">Yoga</a>
+        <a href="#meditation" class="nav-link text-gray-600 hover:text-sky-600 transition-colors">Meditation</a>
+        <a href="#" class="nav-link text-gray-600 hover:text-sky-600 transition-colors">Nearby Clinics</a>
+        <a href="#" class="nav-link text-gray-600 hover:text-sky-600 transition-colors">Profile</a>
+      </div>
+
+      <!-- Login Button -->
+      <button class="btn-glow px-6 py-2.5 rounded-xl text-white font-semibold">
+        Login
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center pt-24 pb-16 px-4 overflow-hidden">
+    <!-- Background Glows -->
+    <div class="hero-glow absolute top-1/4 -left-48"></div>
+    <div class="hero-glow-2 absolute bottom-1/4 -right-48"></div>
+
+    <div class="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <!-- Text Content -->
+      <div class="text-center lg:text-left">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+          <span class="bg-gradient-to-r from-sky-600 via-purple-500 to-purple-600 bg-clip-text text-transparent">Your Personal</span>
+          <br>
+          <span class="bg-gradient-to-r from-purple-600 to-sky-600 bg-clip-text text-transparent">AI Health Mentor</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0">
+          Improve your physical fitness, mental wellness, and lifestyle using AI powered insights
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <button class="btn-glow px-8 py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Start Health Test
+          </button>
+          <button class="btn-outline-glow px-8 py-4 rounded-2xl text-gray-700 font-bold text-lg flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            Talk to AI Mentor
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Illustration -->
+      <div class="relative flex justify-center items-center">
+        <div class="float-animation relative">
+          <!-- Main Illustration Container -->
+          <div class="glass-card rounded-3xl p-8 w-80 h-80 flex items-center justify-center relative">
+            <!-- Glowing Background Circle -->
+            <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-sky-200/30 to-purple-200/30"></div>
+
+            <!-- Meditation Figure SVG -->
+            <svg class="w-48 h-48 relative z-10" viewBox="0 0 200 200" fill="none">
+              <!-- Outer Glow Ring -->
+              <circle cx="100" cy="100" r="80" fill="url(#glowGradient)" opacity="0.3"/>
+              <!-- Lotus Flower -->
+              <ellipse cx="100" cy="160" rx="60" ry="15" fill="#D8B4FE" opacity="0.5"/>
+              <path d="M100 145 Q70 130 60 145 Q70 160 100 150 Q130 160 140 145 Q130 130 100 145" fill="#F0ABFC" opacity="0.8"/>
+              <path d="M100 135 Q80 120 75 135 Q80 150 100 142 Q120 150 125 135 Q120 120 100 135" fill="#F5D0FE"/>
+              <!-- Meditation Person -->
+              <circle cx="100" cy="90" r="25" fill="url(#bodyGradient)"/>
+              <!-- Head -->
+              <circle cx="100" cy="55" r="18" fill="#FCD34D" opacity="0.9"/>
+              <!-- Aura Rays -->
+              <path d="M100 20 L100 35" stroke="#87CEEB" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <path d="M130 30 L120 42" stroke="#D8B4FE" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <path d="M70 30 L80 42" stroke="#D8B4FE" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <path d="M145 55 L130 55" stroke="#86EFAC" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <path d="M55 55 L70 55" stroke="#86EFAC" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+              <!-- Closed Eyes -->
+              <path d="M93 53 Q96 56 99 53" stroke="#9333EA" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <path d="M101 53 Q104 56 107 53" stroke="#9333EA" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <!-- Smile -->
+              <path d="M95 62 Q100 66 105 62" stroke="#9333EA" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <!-- AI Sparkle -->
+              <circle cx="160" cy="40" r="8" fill="url(#sparkleGradient)"/>
+              <circle cx="40" cy="60" r="6" fill="url(#sparkleGradient2)"/>
+              <circle cx="170" cy="100" r="5" fill="url(#sparkleGradient)"/>
+              <defs>
+                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#87CEEB"/>
+                  <stop offset="100%" stop-color="#D8B4FE"/>
+                </linearGradient>
+                <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#87CEEB"/>
+                  <stop offset="100%" stop-color="#D8B4FE"/>
+                </linearGradient>
+                <linearGradient id="sparkleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FCD34D"/>
+                  <stop offset="100%" stop-color="#F59E0B"/>
+                </linearGradient>
+                <linearGradient id="sparkleGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#86EFAC"/>
+                  <stop offset="100%" stop-color="#22C55E"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- Floating Elements -->
+          <div class="absolute -top-4 -right-4 glass-card rounded-2xl p-3 animate-bounce" style="animation-duration: 3s;">
+            <span class="text-2xl">🧘</span>
+          </div>
+          <div class="absolute -bottom-4 -left-4 glass-card rounded-2xl p-3 animate-bounce" style="animation-duration: 4s;">
+            <span class="text-2xl">✨</span>
+          </div>
+          <div class="absolute top-1/2 -right-8 glass-card rounded-2xl p-3 animate-bounce" style="animation-duration: 3.5s;">
+            <span class="text-2xl">🌿</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+      <span class="text-sm text-gray-500">Scroll to explore</span>
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Feature Cards Section -->
+  <section class="py-20 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+          <span class="bg-gradient-to-r from-sky-600 to-purple-600 bg-clip-text text-transparent">Discover Your Path to Wellness</span>
+        </h2>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Explore our comprehensive AI-powered features designed to nurture your mind, body, and spirit
+        </p>
+      </div>
+
+      <!-- Feature Cards Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card 1: AI Health Test -->
+        <div class="feature-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="icon-glow w-16 h-16 rounded-2xl flex items-center justify-center mb-5">
+            <svg class="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">AI Health Test</h3>
+          <p class="text-gray-600">Weekly AI health analysis to track your wellness journey and identify areas for improvement</p>
+        </div>
+
+        <!-- Card 2: Daily Fitness Plan -->
+        <div class="feature-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="icon-glow w-16 h-16 rounded-2xl flex items-center justify-center mb-5">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">Daily Fitness Plan</h3>
+          <p class="text-gray-600">Personalized daily tasks tailored to your fitness level and health goals</p>
+        </div>
+
+        <!-- Card 3: AI Chat Mentor -->
+        <div class="feature-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="icon-glow w-16 h-16 rounded-2xl flex items-center justify-center mb-5">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">AI Chat Mentor</h3>
+          <p class="text-gray-600">Ask health questions anytime and receive instant, thoughtful guidance</p>
+        </div>
+
+        <!-- Card 4: Yoga Recommendation -->
+        <div class="feature-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="icon-glow w-16 h-16 rounded-2xl flex items-center justify-center mb-5">
+            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            <circle cx="18" cy="18" r="3" fill="#FCD34D" stroke="none"/>
+            <circle cx="6" cy="6" r="3" fill="#86EFAC" stroke="none"/>
+            <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke-width="1.5"/>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">Yoga Recommendation</h3>
+          <p class="text-gray-600">AI suggested yoga routines based on your flexibility and wellness needs</p>
+        </div>
+
+        <!-- Card 5: Meditation Section -->
+        <div class="feature-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="icon-glow w-16 h-16 rounded-2xl flex items-center justify-center mb-5">
+            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">Meditation Section</h3>
+          <p class="text-gray-600">Relaxing guided meditation sessions for inner peace and clarity</p>
+        </div>
+
+        <!-- Card 6: Nearby Clinics -->
+        <div class="feature-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="icon-glow w-16 h-16 rounded-2xl flex items-center justify-center mb-5">
+            <svg class="w-8 h-8 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">Nearby Clinics</h3>
+          <p class="text-gray-600">Find the best healthcare facilities and clinics in your vicinity</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Preview Section -->
+  <section id="dashboard" class="py-20 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="glass-card rounded-3xl p-8 md:p-12">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <!-- Dashboard Content -->
+          <div>
+            <span class="inline-block px-4 py-1.5 rounded-full bg-sky-100 text-sky-600 font-medium text-sm mb-4">Dashboard Preview</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Track Your Wellness Journey</h2>
+            <p class="text-gray-600 mb-8">Monitor your health progress with beautiful visualizations and AI-powered insights</p>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-4">
+              <!-- Health Score -->
+              <div class="glass-card rounded-2xl p-4 text-center">
+                <div class="relative w-20 h-20 mx-auto mb-3">
+                  <svg class="progress-ring w-20 h-20">
+                    <circle cx="40" cy="40" r="35" stroke="#E5E7EB" stroke-width="6" fill="none"/>
+                    <circle class="progress-ring-circle" cx="40" cy="40" r="35" stroke="url(#progressGradient)" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="44"/>
+                  </svg>
+                  <span class="absolute inset-0 flex items-center justify-center text-xl font-bold text-gray-800">80</span>
+                </div>
+                <span class="text-sm text-gray-600">Health Score</span>
+              </div>
+
+              <!-- Completed Tasks -->
+              <div class="glass-card rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center">
+                  <span class="text-2xl font-bold text-green-700">12</span>
+                </div>
+                <span class="text-sm text-gray-600">Tasks Done</span>
+              </div>
+
+              <!-- Streak -->
+              <div class="glass-card rounded-2xl p-4 text-center">
+                <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-amber-200 to-amber-300 flex items-center justify-center">
+                  <span class="text-2xl font-bold text-amber-700">7</span>
+                </div>
+                <span class="text-sm text-gray-600">Day Streak</span>
+              </div>
+            </div>
+
+            <defs>
+              <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#87CEEB"/>
+                <stop offset="100%" stop-color="#D8B4FE"/>
+              </linearGradient>
+            </defs>
+          </div>
+
+          <!-- Weekly Progress Chart -->
+          <div class="glass-card rounded-3xl p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-6">Weekly Progress</h3>
+            <div class="flex items-end justify-between h-48 gap-3 px-4">
+              <!-- Bar Chart -->
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full h-32 rounded-t-xl bg-gradient-to-t from-sky-300 to-sky-200 chart-bar" style="height: 60%;"></div>
+                <span class="text-sm text-gray-500">Mon</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full h-32 rounded-t-xl bg-gradient-to-t from-sky-300 to-sky-200 chart-bar" style="height: 80%;"></div>
+                <span class="text-sm text-gray-500">Tue</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full h-32 rounded-t-xl bg-gradient-to-t from-purple-300 to-purple-200 chart-bar" style="height: 45%;"></div>
+                <span class="text-sm text-gray-500">Wed</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full h-32 rounded-t-xl bg-gradient-to-t from-purple-300 to-purple-200 chart-bar" style="height: 90%;"></div>
+                <span class="text-sm text-gray-500">Thu</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full h-32 rounded-t-xl bg-gradient-to-t from-green-300 to-green-200 chart-bar" style="height: 70%;"></div>
+                <span class="text-sm text-gray-500">Fri</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full h-32 rounded-t-xl bg-gradient-to-t from-green-300 to-green-200 chart-bar" style="height: 95%;"></div>
+                <span class="text-sm text-gray-500">Sat</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2">
+                <div class="w-full h-32 rounded-t-xl bg-gradient-to-t from-amber-300 to-amber-200 chart-bar" style="height: 50%;"></div>
+                <span class="text-sm text-gray-500">Sun</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Chat Preview Section -->
+  <section id="ai-chat" class="py-20 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="glass-card rounded-3xl p-8 md:p-12">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <!-- Chat Preview -->
+          <div class="order-2 lg:order-1">
+            <div class="glass-card rounded-3xl p-6 max-w-md mx-auto">
+              <!-- Chat Header -->
+              <div class="flex items-center gap-3 mb-6 pb-4 border-b border-white/30">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-purple-400 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">AI Health Mentor</h4>
+                  <span class="text-sm text-green-500 flex items-center gap-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full"></span> Online
+                  </span>
+                </div>
+              </div>
+
+              <!-- Chat Messages -->
+              <div class="space-y-4">
+                <!-- User Message -->
+                <div class="flex justify-end">
+                  <div class="chat-bubble-user px-4 py-3 max-w-xs">
+                    <p class="text-white font-medium">I feel stressed</p>
+                  </div>
+                </div>
+
+                <!-- AI Response -->
+                <div class="flex justify-start">
+                  <div class="chat-bubble-ai px-4 py-3 max-w-xs">
+                    <p class="text-gray-700">I understand you're feeling stressed. Let's try a breathing exercise — inhale for 4 counts, hold for 4, exhale for 4. Also, a short 10-minute walk can help clear your mind. Would you like me to guide you through it?</p>
+                  </div>
+                </div>
+
+                <!-- User Message -->
+                <div class="flex justify-end">
+                  <div class="chat-bubble-user px-4 py-3 max-w-xs">
+                    <p class="text-white font-medium">Yes, please guide me</p>
+                  </div>
+                </div>
+
+                <!-- AI Response -->
+                <div class="flex justify-start">
+                  <div class="chat-bubble-ai px-4 py-3">
+                    <p class="text-gray-700 mb-3">Let's start with deep breathing...</p>
+                    <button class="w-full py-3 rounded-xl bg-gradient-to-r from-sky-300 to-purple-300 text-white font-semibold flex items-center justify-center gap-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      Start Breathing Exercise
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Content -->
+          <div class="order-1 lg:order-2">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-purple-100 text-purple-600 font-medium text-sm mb-4">AI Chat Preview</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Your 24/7 Wellness Companion</h2>
+            <p class="text-gray-600 mb-6">Get instant, empathetic support for any health concern. Our AI mentor is always available to listen, guide, and help you navigate your wellness journey.</p>
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3 text-gray-700">
+                <span class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </span>
+                Personalized health recommendations
+              </li>
+              <li class="flex items-center gap-3 text-gray-700">
+                <span class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </span>
+                Stress and anxiety management
+              </li>
+              <li class="flex items-center gap-3 text-gray-700">
+                <span class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </span>
+                Exercise and nutrition guidance
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Yoga Preview Section -->
+  <section id="yoga" class="py-20 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-600 font-medium text-sm mb-4">Yoga Preview</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">AI-Powered Yoga Routines</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Personalized yoga recommendations tailored to your skill level and wellness goals</p>
+      </div>
+
+      <!-- Yoga Pose Cards -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Pose Card 1 -->
+        <div class="yoga-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="yoga-icon w-24 h-24 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-sky-100 to-purple-100 flex items-center justify-center transition-transform duration-300">
+            <svg class="w-16 h-16" viewBox="0 0 100 100" fill="none">
+              <!-- Mountain Pose Figure -->
+              <circle cx="50" cy="20" r="10" fill="#FCD34D"/>
+              <path d="M50 30 L50 55" stroke="#87CEEB" stroke-width="4" stroke-linecap="round"/>
+              <path d="M50 55 L35 80" stroke="#D8B4FE" stroke-width="4" stroke-linecap="round"/>
+              <path d="M50 55 L65 80" stroke="#D8B4FE" stroke-width="4" stroke-linecap="round"/>
+              <path d="M30 45 L50 35 L70 45" stroke="#86EFAC" stroke-width="3" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 text-center mb-2">Mountain Pose</h3>
+          <p class="text-gray-600 text-center text-sm mb-4">Improves posture and balance</p>
+          <div class="flex justify-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-600 text-xs font-medium">Beginner</span>
+            <span class="px-3 py-1 rounded-full bg-green-100 text-green-600 text-xs font-medium">15 min</span>
+          </div>
+        </div>
+
+        <!-- Pose Card 2 -->
+        <div class="yoga-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="yoga-icon w-24 h-24 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center transition-transform duration-300">
+            <svg class="w-16 h-16" viewBox="0 0 100 100" fill="none">
+              <!-- Tree Pose Figure -->
+              <circle cx="50" cy="18" r="10" fill="#FCD34D"/>
+              <path d="M50 28 L50 50" stroke="#87CEEB" stroke-width="4" stroke-linecap="round"/>
+              <path d="M50 50 L40 78" stroke="#D8B4FE" stroke-width="4" stroke-linecap="round"/>
+              <path d="M50 50 Q65 40 60 60" stroke="#D8B4FE" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M35 38 L65 38" stroke="#86EFAC" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 text-center mb-2">Tree Pose</h3>
+          <p class="text-gray-600 text-center text-sm mb-4">Enhances focus and stability</p>
+          <div class="flex justify-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-600 text-xs font-medium">Intermediate</span>
+            <span class="px-3 py-1 rounded-full bg-green-100 text-green-600 text-xs font-medium">10 min</span>
+          </div>
+        </div>
+
+        <!-- Pose Card 3 -->
+        <div class="yoga-card glass-card glass-card-hover rounded-3xl p-6 transition-all duration-500 cursor-pointer">
+          <div class="yoga-icon w-24 h-24 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center transition-transform duration-300">
+            <svg class="w-16 h-16" viewBox="0 0 100 100" fill="none">
+              <!-- Warrior Pose Figure -->
+              <circle cx="50" cy="18" r="10" fill="#FCD34D"/>
+              <path d="M50 28 L50 50" stroke="#87CEEB" stroke-width="4" stroke-linecap="round"/>
+              <path d="M50 50 L30 70" stroke="#D8B4FE" stroke-width="4" stroke-linecap="round"/>
+              <path d="M50 50 L70 60" stroke="#D8B4FE" stroke-width="4" stroke-linecap="round"/>
+              <path d="M30 70 L25 78" stroke="#D8B4FE" stroke-width="3" stroke-linecap="round"/>
+              <path d="M70 60 L80 78" stroke="#D8B4FE" stroke-width="3" stroke-linecap="round"/>
+              <path d="M25 40 L75 40" stroke="#86EFAC" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 text-center mb-2">Warrior Pose</h3>
+          <p class="text-gray-600 text-center text-sm mb-4">Builds strength and confidence</p>
+          <div class="flex justify-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-600 text-xs font-medium">Intermediate</span>
+            <span class="px-3 py-1 rounded-full bg-green-100 text-green-600 text-xs font-medium">20 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-10">
+        <button class="btn-outline-glow px-8 py-3 rounded-xl font-semibold">
+          View All Yoga Routines
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Meditation Preview Section -->
+  <section id="meditation" class="py-20 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="glass-card rounded-3xl overflow-hidden">
+        <div class="grid lg:grid-cols-2">
+          <!-- Video Preview -->
+          <div class="meditation-video p-8 flex flex-col items-center justify-center min-h-[400px]">
+            <div class="relative">
+              <!-- Video Thumbnail Background -->
+              <div class="w-72 h-48 rounded-3xl bg-gradient-to-br from-sky-200 via-purple-200 to-pink-200 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-3xl bg-black/10"></div>
+                <!-- Play Button -->
+                <button class="play-btn w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-lg relative z-10">
+                  <svg class="w-8 h-8 text-sky-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+              </div>
+              <!-- Floating Elements -->
+              <div class="absolute -top-6 -right-6 glass-card rounded-2xl p-3 animate-bounce" style="animation-duration: 3s;">
+                <span class="text-2xl">🧘</span>
+              </div>
+              <div class="absolute -bottom-4 -left-4 glass-card rounded-2xl p-3 animate-bounce" style="animation-duration: 4s;">
+                <span class="text-2xl">✨</span>
+              </div>
+            </div>
+            <p class="mt-8 text-gray-600 font-medium">Guided Morning Meditation</p>
+            <p class="text-gray-400 text-sm">10 minutes • All Levels</p>
+          </div>
+
+          <!-- Meditation Content -->
+          <div class="p-8 md:p-12 flex flex-col justify-center">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-600 font-medium text-sm mb-4 w-fit">Meditation Preview</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Find Your Inner Peace</h2>
+            <p class="text-gray-600 mb-6">Immerse yourself in calming guided meditation sessions designed to reduce stress and promote mental clarity.</p>
+
+            <div class="space-y-4 mb-8">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-100 to-sky-200 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">Morning Calm</h4>
+                  <p class="text-sm text-gray-500">Start your day with clarity</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">Sleep Better</h4>
+                  <p class="text-sm text-gray-500">Peaceful bedtime sessions</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">Stress Relief</h4>
+                  <p class="text-sm text-gray-500">Release tension and anxiety</p>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-glow px-8 py-3 rounded-xl text-white font-semibold w-fit">
+              Explore Meditation
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="glass-card rounded-3xl p-8 md:p-12">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+          <!-- Brand -->
+          <div class="md:col-span-1">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-300 to-purple-300 flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+              </div>
+              <span class="text-xl font-bold bg-gradient-to-r from-sky-600 to-purple-600 bg-clip-text text-transparent">AI Health Mentor</span>
+            </div>
+            <p class="text-gray-600 text-sm">Your personal wellness companion powered by AI for a healthier, happier life.</p>
+          </div>
+
+          <!-- Links -->
+          <div>
+            <h4 class="font-semibold text-gray-800 mb-4">Company</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">About Us</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">Careers</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">Press</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-gray-800 mb-4">Support</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">Help Center</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">Contact Us</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">FAQs</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-gray-800 mb-4">Legal</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">Privacy Policy</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">Terms of Service</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-sky-600 transition-colors">Cookie Policy</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-white/30 pt-8">
+          <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-sm">&copy; 2026 AI Health Mentor. All rights reserved.</p>
+            <div class="flex gap-4">
+              <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/40 transition-colors">
+                <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                </svg>
+              </a>
+              <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/40 transition-colors">
+                <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/40 transition-colors">
+                <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.glass-card').forEach(card => {
+      observer.observe(card);
+    });
+
+    // Smooth reveal for sections
+    const sections = document.querySelectorAll('section');
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    sections.forEach(section => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+      section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      sectionObserver.observe(section);
+    });
+  </script>
+</body>
+</html>
